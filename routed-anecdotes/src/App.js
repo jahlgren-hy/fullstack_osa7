@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
   Switch, Route, Link,
+  useHistory,
   useParams
 } from "react-router-dom"
 
@@ -63,6 +64,7 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
+  const history = useHistory()
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -76,6 +78,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    history.push('/')
   }
 
   return (
@@ -101,6 +104,14 @@ const CreateNew = (props) => {
 
 }
 
+
+const Notification = ({ message }) => {
+  return (
+    <div>
+      <p>{message}</p>
+    </div>
+  )
+}
 
 const Menu = ({ anecdotes, addNew }) => {
   const padding = {
@@ -154,6 +165,10 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new anecdote '${anecdote.content}' creted`)
+    setTimeout(() => {
+      setNotification('')
+    }, 5000)
   }
 
   const anecdoteById = (id) =>
@@ -173,6 +188,7 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
+      <Notification message={notification} />
       <Menu anecdotes={anecdotes} addNew={addNew} />
       <Footer />
     </div>
