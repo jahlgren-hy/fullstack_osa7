@@ -5,7 +5,6 @@ import {
   useHistory,
   useParams
 } from 'react-router-dom'
-
 import { useField } from './hooks'
 
 const Anecdote = ({ anecdotes }) => {
@@ -71,7 +70,7 @@ const CreateNew = (props) => {
   const author = useField('text')
   const info = useField('text')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     props.addNew({
       content: content.value,
@@ -79,6 +78,8 @@ const CreateNew = (props) => {
       info: info.value,
       votes: 0
     })
+
+    content.reset()
     history.push('/')
   }
 
@@ -88,21 +89,20 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content} />
+          <input {...content.fields()} />
         </div>
         <div>
           author
-          <input {...author} />
+          <input {...author.fields()} />
         </div>
         <div>
           url for more info
-          <input {...info} />
+          <input {...info.fields()} />
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
       </form>
     </div>
   )
-
 }
 
 
@@ -114,7 +114,7 @@ const Notification = ({ message }) => {
   )
 }
 
-const Menu = ({ anecdotes, addNew }) => {
+const Menu = ({ anecdotes, addNew, reset }) => {
   const padding = {
     paddingRight: 5
   }
@@ -190,7 +190,10 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Notification message={notification} />
-      <Menu anecdotes={anecdotes} addNew={addNew} />
+      <Menu
+        anecdotes={anecdotes}
+        addNew={addNew}
+      />
       <Footer />
     </div>
   )
