@@ -3,18 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/user-event": "^12.1",
+    "@testing-library/user-event": "^12.1.0",
     "axios": "^0.21.0",
     "prop-types": "^15.7.2",
-    "react": "^17",
-    "react-dom": "^17",
-    "react-scripts": "^4"
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-redux": "^7.2.2",
+    "react-scripts": "^4.0.0",
+    "redux": "^4.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "snyk": "snyk test",
     "test": "react-scripts test",
-    "test-trace": "node --trace-warnings node_modules/.bin/jest --no-cache",
+    "test-all": "eslint . && snyk test t&& react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
@@ -42,6 +45,8 @@
     "@testing-library/react": "^11.1.0",
     "cypress": "^5.5.0",
     "eslint-plugin-cypress": "^2.11.2",
-    "eslint-plugin-jest": "^24.1.0"
+    "eslint-plugin-jest": "^24.1.0",
+    "eslint-plugin-security": "^1.4.0",
+    "snyk": "^1.421.1"
   }
 }

@@ -7,6 +7,8 @@
 
 # testing
 **/coverage
+**/videos
+**/__snapshots__
 
 # production
 **/build
@@ -22,4 +24,4 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.hours.md
+.hours.md*

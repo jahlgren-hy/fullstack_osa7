@@ -4,6 +4,7 @@ require('express-async-errors')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
+const helmet = require('helmet')
 
 const config = require('./utils/config')
 const logger = require('./utils/logger')
@@ -13,6 +14,7 @@ const loginRouter = require('./controllers/login')
 const usersRouter = require('./controllers/users')
 
 const app = express()
+app.use(helmet())
 
 logger.info(`Environment on app.js: ${process.env.NODE_ENV}`)
 app.use(cors())
