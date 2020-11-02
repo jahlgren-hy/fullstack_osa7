@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
-import BlogForm from './forms/BlogForm'
-import LoginForm from './forms/LoginForm'
-import Notification from './components/Notification'
-import Togglable from './components/Togglable'
-import blogService from './services/blogs'
-import loginService from './services/login'
 import { useDispatch } from 'react-redux'
-import { setNotification } from './reducers/notificationReducer'
-import './app.css'
+import Blog from './Blog'
+import BlogForm from '../forms/BlogForm'
+import LoginForm from '../forms/LoginForm'
+import Notification from './Notification'
+import Togglable from './Togglable'
+import blogService from '../services/blogs'
+import loginService from '../services/login'
+import storage from '../utils/storage'
+
+import { setNotification } from '../reducers/notification'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -17,6 +18,8 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [blogs, setBlogs] = useState([])
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService
@@ -27,25 +30,23 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window
-      .localStorage
-      .getItem('loggedAppUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
+    const user = storage.loadUser()
+    setUser(user)
   }, [])
 
-  const blogFormRef = useRef()
-
-  const addBlog = async (blog) => {
-    blogFormRef.current.toggleVisibility()
+  const createBlog = async (blog) => {
     try {
+
       const newBlog = await blogService
         .create(blog)
+      blogFormRef.current.toggleVisibility()
       setBlogs(blogs.concat(newBlog))
-      setNotification(`Lisätty uusi blogi ${newBlog.author}'n ${newBlog.title} `)
+      dispatch()
+      setNotification(
+        {
+          message: `a new blog '${newBlog.title}' by ${newBlog.author} added!`,
+        }
+      )
     } catch (error) {
       console.log(error)
     }
@@ -58,17 +59,20 @@ const App = () => {
       const user = await loginService
         .login({ username, password, })
 
-      window.localStorage.setItem(
-        'loggedAppUser', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-
-      setUser(user)
       setUsername('')
       setPassword('')
-    } catch (error) {
-      dispatch(setNotification('wrong credentials!', 'error'))
       setUser(user)
+      dispatch(setNotification(
+        { message: `${user.name} welcome back!` },
+      ))
+      storage.saveUser(user)
+    } catch (error) {
+      dispatch(setNotification(
+        {
+          message: 'wrong username/password',
+          type: 'error'
+        }
+      ))
       setUsername('')
       setPassword('')
       console.log(error)
@@ -76,8 +80,11 @@ const App = () => {
   }
 
   const handleLogout = async () => {
-    window.localStorage.removeItem('loggedAppUser')
+    dispatch(setNotification(
+      { message: `${user.name} logged out` },
+    ))
     setUser(null)
+    storage.logoutUser()
   }
 
   const blogView = () => (
@@ -87,7 +94,7 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </p>
       <Togglable buttonLabel="New blog" ref={blogFormRef}>
-        <BlogForm onSubmit={addBlog} />
+        <BlogForm onSubmit={createBlog} />
       </Togglable>
       {blogs
         .sort((a, b) => b.likes - a.likes)
@@ -108,14 +115,14 @@ const App = () => {
   )
 
   return (
-    <div className="App">
+    <main className="App">
       <header>
         <h1> Blogs</h1>
       </header>
       <Notification />
       {user === null && loginForm()}
       {user !== null && blogView()}
-    </div>
+    </main>
   )
 }
 
