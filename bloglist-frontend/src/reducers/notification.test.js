@@ -1,4 +1,5 @@
-import notification, { SET_NOTIFICATION }
+import notification,
+{ SET_NOTIFICATION, CLEAR_NOTIFICATION }
   from './notification'
 import deepFreeze from 'deep-freeze'
 
@@ -24,7 +25,7 @@ describe('notification reducer', () => {
     expect(nextState).toEqual(action.data)
 
     action = {
-      type: 'SET_NOTIFICATION',
+      type: SET_NOTIFICATION,
       data: {
         message: 'test message',
         type: 'test'
@@ -33,5 +34,29 @@ describe('notification reducer', () => {
 
     nextState = notification(state, action)
     expect(nextState).toEqual(action.data)
+    expect(nextState).toMatchSnapshot()
+  })
+
+  it('should handle CLEAR_NOTIFICATION', () => {
+    const state = []
+    let action = {
+      type: SET_NOTIFICATION,
+      data: {
+        message: 'test message',
+      }
+    }
+
+    deepFreeze(state)
+
+    let nextState = notification(state, action)
+    expect(nextState).toEqual(action.data)
+
+    action = {
+      type: CLEAR_NOTIFICATION,
+    }
+
+    nextState = notification(state, action)
+    expect(nextState).toEqual(null)
+    expect(nextState).toMatchSnapshot()
   })
 })

@@ -2,11 +2,10 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import Blog from './Blog'
 import BlogForm from '../forms/BlogForm'
-import LoginForm from '../forms/LoginForm'
+import Login from './Login'
 import Notification from './Notification'
 import Togglable from './Togglable'
 import blogService from '../services/blogs'
-import loginService from '../services/login'
 import storage from '../utils/storage'
 
 import { setNotification } from '../reducers/notification'
@@ -15,11 +14,14 @@ const App = () => {
   const dispatch = useDispatch()
 
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [blogs, setBlogs] = useState([])
 
   const blogFormRef = useRef()
+
+  useEffect(() => {
+    const user = storage.loadUser()
+    setUser(user)
+  }, [])
 
   useEffect(() => {
     blogService
@@ -27,11 +29,6 @@ const App = () => {
       .then(blogs =>
         setBlogs(blogs)
       )
-  }, [])
-
-  useEffect(() => {
-    const user = storage.loadUser()
-    setUser(user)
   }, [])
 
   const createBlog = async (blog) => {
@@ -48,33 +45,6 @@ const App = () => {
         }
       )
     } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-
-    try {
-      const user = await loginService
-        .login({ username, password, })
-
-      setUsername('')
-      setPassword('')
-      setUser(user)
-      dispatch(setNotification(
-        { message: `${user.name} welcome back!` },
-      ))
-      storage.saveUser(user)
-    } catch (error) {
-      dispatch(setNotification(
-        {
-          message: 'wrong username/password',
-          type: 'error'
-        }
-      ))
-      setUsername('')
-      setPassword('')
       console.log(error)
     }
   }
@@ -104,23 +74,15 @@ const App = () => {
     </div>
   )
 
-  const loginForm = () => (
-    <LoginForm
-      username={username}
-      password={password}
-      handleUsernameChange={({ target }) => setUsername(target.value)}
-      handlePasswordChange={({ target }) => setPassword(target.value)}
-      handleSubmit={handleLogin}
-    />
-  )
-
   return (
     <main className="App">
       <header>
         <h1> Blogs</h1>
       </header>
       <Notification />
-      {user === null && loginForm()}
+      {user === null &&
+        <Login />
+      }
       {user !== null && blogView()}
     </main>
   )

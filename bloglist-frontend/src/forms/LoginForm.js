@@ -10,33 +10,35 @@ const LoginForm = ({
   password
 }) => {
   return (
-    <div>
-      <h2>log in to application</h2>
-
+    <section>
       <form onSubmit={handleSubmit}>
-        <div>
-          username
-          <input
-            id="username"
-            type="text"
-            value={username}
-            name="Username"
-            onChange={handleUsernameChange}
-          />
+        <div className="form-group">
+          <label htmlFor="username">
+            username
+            <input
+              id="username"
+              type="text"
+              value={username}
+              name="Username"
+              onChange={handleUsernameChange}
+            />
+          </label>
         </div>
-        <div>
-          password
-          <input
-            id="password"
-            type="password"
-            value={password}
-            name="Password"
-            onChange={handlePasswordChange}
-          />
+        <div className="form-group">
+          <label htmlFor="password">
+            password
+            <input
+              id="password"
+              type="password"
+              value={password}
+              name="Password"
+              onChange={handlePasswordChange}
+            />
+          </label>
         </div>
         <button id="login-button" type="submit">login</button>
       </form>
-    </div>
+    </section >
   )
 }
 
