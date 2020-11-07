@@ -1,77 +1,67 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
-import Blog from './Blog'
-import BlogForm from '../forms/BlogForm'
-import Login from './Login'
+import React, { useEffect, useState } from 'react'
+import LoginForm from '../forms/LoginForm'
+import BlogList from './BlogList'
 import Notification from './Notification'
-import Togglable from './Togglable'
 import blogService from '../services/blogs'
+import loginService from '../services/login'
 import storage from '../utils/storage'
 
+import { initializeBlogs } from '../reducers/blogs'
 import { setNotification } from '../reducers/notification'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
   const dispatch = useDispatch()
 
   const [user, setUser] = useState(null)
-  const [blogs, setBlogs] = useState([])
-
-  const blogFormRef = useRef()
-
-  useEffect(() => {
-    const user = storage.loadUser()
-    setUser(user)
-  }, [])
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then(blogs =>
-        setBlogs(blogs)
-      )
+    dispatch(initializeBlogs())
+  }, [dispatch])
+
+  useEffect(() => {
+    setUser(storage.loadUser())
   }, [])
 
-  const createBlog = async (blog) => {
+  const handleLogin = async (event) => {
+    event.preventDefault()
+
     try {
+      const user = await loginService
+        .login({ username, password, })
 
-      const newBlog = await blogService
-        .create(blog)
-      blogFormRef.current.toggleVisibility()
-      setBlogs(blogs.concat(newBlog))
-      dispatch()
-      setNotification(
-        {
-          message: `a new blog '${newBlog.title}' by ${newBlog.author} added!`,
-        }
-      )
+      setUser(user)
+      setUsername('')
+      setPassword('')
+
+      storage.saveUser(user)
+      blogService.setToken(user.token)
     } catch (error) {
-      console.log(error)
+      dispatch(
+        setNotification(
+          {
+            message: 'wrong credentials',
+            type: 'error',
+          }
+        )
+      )
+      // setUser(user)
+      setUsername('')
+      setPassword('')
+      //storage.saveUser(user)
     }
   }
 
-  const handleLogout = async () => {
-    dispatch(setNotification(
-      { message: `${user.name} logged out` },
-    ))
-    setUser(null)
-    storage.logoutUser()
-  }
-
-  const blogView = () => (
-    <div>
-      <h2>blogs</h2>
-      <p>{user.name} logged in
-        <button onClick={handleLogout}>logout</button>
-      </p>
-      <Togglable buttonLabel="New blog" ref={blogFormRef}>
-        <BlogForm onSubmit={createBlog} />
-      </Togglable>
-      {blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map(b =>
-          <Blog key={b.id} blog={b} />
-        )}
-    </div>
+  const loginForm = () => (
+    <LoginForm
+      username={username}
+      password={password}
+      handleUsernameChange={({ target }) => setUsername(target.value)}
+      handlePasswordChange={({ target }) => setPassword(target.value)}
+      handleSubmit={handleLogin}
+    />
   )
 
   return (
@@ -81,9 +71,9 @@ const App = () => {
       </header>
       <Notification />
       {user === null &&
-        <Login />
+        loginForm()
       }
-      {user !== null && blogView()}
+      <BlogList />
     </main>
   )
 }
