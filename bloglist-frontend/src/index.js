@@ -5,7 +5,6 @@ import store from './reducers'
 import App from './components/App'
 import './index.css'
 
-console.log(store.getState())
 ReactDOM.render(
   <Provider store={store}>
     <App />

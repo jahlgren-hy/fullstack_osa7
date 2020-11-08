@@ -1,83 +1,63 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
-const BlogForm = (props) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+const BlogForm = ({
+  onSubmit,
+  title,
+  author,
+  url
+}) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+
     try {
       const blog = {
-        title: title,
-        author: author,
-        url: url,
+        title: title.value,
+        author: author.value,
+        url: url.value,
       }
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-
-      await props.onSubmit(blog)
+      await onSubmit(blog)
     } catch (error) {
-      setTitle('')
-      setAuthor('')
-      setUrl('')
       console.log(error)
     }
   }
 
-  const form = () => (
-    <form onSubmit={handleSubmit}>
-      <div>
-        Title
-        <input
-          id="title"
-          type="text"
-          value={title}
-          name="Title"
-          onChange={({ target }) => setTitle(target.value)}
-        />
-      </div>
-
-      <div>
-        Author
-        <input
-          id="author"
-          type="text"
-          value={author}
-          name="Author"
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-      </div>
-
-      <div>
-        Url
-        <input
-          id="url"
-          type="text"
-          value={url}
-          name="Url"
-          onChange={({ target }) => setUrl(target.value)}
-        />
-      </div>
-
-      <div>
-        <button type="submit">Luo</button>
-      </div>
-    </form>
-  )
-
   return (
-    <div>
-      <h2>crete new</h2>
-      {form()}
-    </div>
+    <form onSubmit={handleSubmit}>
+      <fieldset>
+        <legend><h2>create new</h2></legend>
+        <div className="form-group">
+          <label htmlFor="title">
+            title
+            <input {...title.fields()} />
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="author">
+            author
+            <input {...author.fields()} />
+          </label>
+        </div>
+        <div className="form-group">
+          <label htmlFor="url">
+            url
+            <input {...url.fields()} />
+          </label>
+        </div>
+        <button id="create-button" type="submit">
+          create
+        </button>
+      </fieldset>
+    </form>
   )
 }
 
 BlogForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  title: PropTypes.object.isRequired,
+  author: PropTypes.object.isRequired,
+  url: PropTypes.object.isRequired,
 }
 
 export default BlogForm

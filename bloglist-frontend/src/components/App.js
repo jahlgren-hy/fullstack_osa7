@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import AddBlog from './AddBlog'
 import BlogList from './BlogList'
 import Login from './Login'
 import Notification from './Notification'
@@ -20,6 +21,7 @@ const App = () => {
       </header>
       <Notification />
       <Login />
+      <AddBlog />
       <BlogList />
     </main>
   )
