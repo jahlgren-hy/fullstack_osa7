@@ -50,6 +50,9 @@
     "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-security": "^1.4.0",
-    "snyk": "^1.421.1"
+    "snyk": "^1.421.1",
+    "stylelint": "^13.7.2",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-order": "^4.1.0"
   }
 }

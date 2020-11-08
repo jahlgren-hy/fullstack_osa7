@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 
 import LoginForm from '../forms/LoginForm'
 import loginService from '../services/login'
 import storage from '../utils/storage'
+
 import { setNotification } from '../reducers/notification'
+import { useDispatch } from 'react-redux'
+import { useField } from '../hooks'
 
 const Login = () => {
   const dispatch = useDispatch()
 
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const username = useField('text')
+  const password = useField('password')
 
   useEffect(() => {
-    const user = storage.loadUser()
-    setUser(user)
+    setUser(storage.loadUser())
   }, [])
 
   const handleLogin = async (event) => {
@@ -23,11 +24,14 @@ const Login = () => {
 
     try {
       const user = await loginService
-        .login({ username, password, })
+        .login({
+          username: username.value,
+          password: password.value
+        })
 
-      setUsername('')
-      setPassword('')
       setUser(user)
+      username.reset()
+      password.reset()
       dispatch(setNotification(
         { message: `${user.name} welcome back!` },
       ))
@@ -39,26 +43,50 @@ const Login = () => {
           type: 'error'
         }
       ))
-      setUsername('')
-      setPassword('')
+      username.reset()
+      password.reset()
       console.log(error)
     }
   }
 
+  const handleLogout = async () => {
+    dispatch(setNotification(
+      { message: `${user.name} logged out` },
+    ))
+    setUser(null)
+    storage.logoutUser()
+  }
+
+  if (user !== null) {
+    return (
+      <section>
+        <p>{user.name} logged in
+          <button onClick={handleLogout}>logout</button>
+        </p>
+      </section>
+    )
+  }
+  return (
+    <LoginForm
+      onSubmit={handleLogin}
+      username={username}
+      password={password}
+    />
+  )
+  /*
   return (
     <section>
       <h2>log in to application</h2>
-      {user === null &&
-        <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleSubmit={handleLogin}
-        />
-      }
+      <form onSubmit={handleLogin}>
+        <input {...username.fields()} />
+        <input {...password.fields()} />
+        <button id="login-button" type="submit">
+          login
+        </button>
+      </form>
     </section>
   )
+  */
 }
 
 export default Login
