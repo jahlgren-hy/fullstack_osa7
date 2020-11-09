@@ -8,6 +8,7 @@ import storage from '../utils/storage'
 import { createBlog } from '../reducers/blogs'
 import { useDispatch } from 'react-redux'
 import { useField } from '../hooks'
+import { setNotification } from '../reducers/notification'
 
 const AddBlog = () => {
   const dispatch = useDispatch()
@@ -27,6 +28,9 @@ const AddBlog = () => {
       blogService.setToken(user.token)
       blogFormRef.current.toggleVisibility()
       dispatch(createBlog(blog))
+      setNotification(
+        `Lisätty uusi blogi ${blog.author}'n ${blog.title}`
+      )
       title.reset()
       author.reset()
       url.reset()
