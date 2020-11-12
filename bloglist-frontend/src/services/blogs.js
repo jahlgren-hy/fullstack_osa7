@@ -30,7 +30,7 @@ const like = async (id, blog) => {
   return response
 }
 
-const remove = async id => {
+const remove = async (id) => {
   const config = {
     headers: { Authorization: token },
   }

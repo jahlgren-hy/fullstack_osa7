@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Button, Form } from 'react-bootstrap'
 
 const BlogForm = ({
   onSubmit,
@@ -24,32 +25,56 @@ const BlogForm = ({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Form inline onSubmit={handleSubmit}>
       <fieldset>
         <legend><h2>create new</h2></legend>
-        <div className="form-group">
-          <label htmlFor="title">
+        <Form.Group>
+          <Form.Label htmlFor="title" srOnly>
             title
-            <input {...title.fields()} />
-          </label>
-        </div>
-        <div className="form-group">
-          <label htmlFor="author">
+          </Form.Label>
+          <Form.Control
+            {...title.fields()}
+            id="title"
+            placeholder="title"
+            aria-describedby="titleHelp"
+          />
+          <Form.Text id="titleHelp" muted>
+            Enter blog title
+          </Form.Text>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label htmlFor="author" srOnly>
             author
-            <input {...author.fields()} />
-          </label>
-        </div>
-        <div className="form-group">
-          <label htmlFor="url">
+          </Form.Label>
+          <Form.Control
+            {...author.fields()}
+            id="author"
+            placeholder="author"
+            aria-describedby="authorHelp"
+          />
+          <Form.Text id="authorHelp" muted>
+            Enter blog author
+          </Form.Text>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label htmlFor="url" srOnly>
             url
-            <input {...url.fields()} />
-          </label>
-        </div>
-        <button id="create-button" type="submit">
+          </Form.Label>
+          <Form.Control
+            {...url.fields()}
+            id="url"
+            placeholder="url"
+            aria-describedby="urlHelp"
+          />
+          <Form.Text id="urlHelp" muted>
+            Enter blog url
+          </Form.Text>
+        </Form.Group>
+        <Button id="create-button" type="submit">
           create
-        </button>
+        </Button>
       </fieldset>
-    </form>
+    </Form>
   )
 }
 

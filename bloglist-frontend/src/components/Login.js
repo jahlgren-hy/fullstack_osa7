@@ -5,6 +5,7 @@ import loginService from '../services/login'
 import storage from '../utils/storage'
 
 import { setNotification } from '../reducers/notification'
+import { Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { useField } from '../hooks'
 
@@ -60,8 +61,13 @@ const Login = () => {
   if (user !== null) {
     return (
       <section>
-        <p>{user.name} logged in
-          <button onClick={handleLogout}>logout</button>
+        <p>{user.name} logged in &nbsp;
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={handleLogout}>
+            logout
+          </Button>
         </p>
       </section>
     )
@@ -73,20 +79,6 @@ const Login = () => {
       password={password}
     />
   )
-  /*
-  return (
-    <section>
-      <h2>log in to application</h2>
-      <form onSubmit={handleLogin}>
-        <input {...username.fields()} />
-        <input {...password.fields()} />
-        <button id="login-button" type="submit">
-          login
-        </button>
-      </form>
-    </section>
-  )
-  */
 }
 
 export default Login
