@@ -1,4 +1,5 @@
 import blogService from '../services/blogs'
+import { setNotification } from '../reducers/notification'
 
 export const INIT_BLOGS = 'INIT_BLOGS'
 export const NEW_BLOG = 'NEW_BLOG'
@@ -22,6 +23,13 @@ const blogs = (state = [], action) => {
 export const createBlog = blog => {
   return async dispatch => {
     const newBlog = await blogService.create(blog)
+    dispatch(
+      setNotification({
+        message:
+          `Lisätty uusi blogi ${blog.author}'n ${blog.title}`
+      }
+      )
+    )
     dispatch({
       type: NEW_BLOG,
       data: newBlog,

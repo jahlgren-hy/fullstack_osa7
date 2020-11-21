@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 import { Button, Collapse, Table } from 'react-bootstrap'
 
 import blogService from '../services/blogs'
-import storage from '../utils/storage'
 import { likeBlog, removeBlog } from '../reducers/blogs'
 import { useDispatch } from 'react-redux'
 
@@ -18,18 +17,17 @@ const Blog = ({ blog }) => {
     open ? setValue('hide') : setValue('view')
   }, [open])
 
-  const user = storage.loadUser()
+  const { user: currentUser } =
+    useSelector(state => state.auth)
 
   const onLike = (event) => {
     event.preventDefault()
-    console.log('like button clicked', blog)
     dispatch(likeBlog(blog.id))
   }
 
   const onRemove = (event) => {
     event.preventDefault()
-    console.log('remove button clicked', blog)
-    blogService.setToken(user.token)
+    blogService.setToken(currentUser.token)
     dispatch(removeBlog(blog.id, blog))
   }
 
@@ -58,8 +56,9 @@ const Blog = ({ blog }) => {
               </Button>
             </p>
             <p>
-              {user.name}
-              {user && user.name === blog.author ?
+              {blog.user.name}
+              {currentUser && blog.user
+                && currentUser.name === blog.user.name ?
                 <Button
                   onClick={onRemove}
                 >remove
@@ -76,8 +75,10 @@ const Blog = ({ blog }) => {
 
 const BlogList = () => {
   const blogs = useSelector(state => state.blogs)
-  const user = storage.loadUser()
-  if (user === null) {
+  const { user: currentUser } =
+    useSelector(state => state.auth)
+
+  if (currentUser === null) {
     return null
   }
   return (

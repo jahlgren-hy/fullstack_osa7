@@ -1,5 +1,7 @@
-export const SET_NOTIFICATION = 'SET_NOTIFICATION'
-export const CLEAR_NOTIFICATION = 'CLEAR_NOTIFICATION'
+import {
+  SET_NOTIFICATION,
+  CLEAR_NOTIFICATION
+} from '../actions/type'
 
 const notification = (state = null, action) => {
   switch (action.type) {

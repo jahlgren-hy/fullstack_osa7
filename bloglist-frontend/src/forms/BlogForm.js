@@ -8,24 +8,8 @@ const BlogForm = ({
   author,
   url
 }) => {
-
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-
-    try {
-      const blog = {
-        title: title.value,
-        author: author.value,
-        url: url.value,
-      }
-      await onSubmit(blog)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   return (
-    <Form inline onSubmit={handleSubmit}>
+    <Form inline onSubmit={onSubmit}>
       <fieldset>
         <legend><h2>create new</h2></legend>
         <Form.Group>

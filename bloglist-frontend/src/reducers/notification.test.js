@@ -1,6 +1,6 @@
-import notification,
-{ SET_NOTIFICATION, CLEAR_NOTIFICATION }
-  from './notification'
+import notification from './notification'
+import { SET_NOTIFICATION, CLEAR_NOTIFICATION }
+  from '../actions/type'
 import deepFreeze from 'deep-freeze'
 
 describe('notification reducer', () => {

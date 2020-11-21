@@ -1,27 +1,19 @@
 import axios from 'axios'
+import authHeader from './auth-header'
 const baseUrl = 'http://localhost:3001/api/blogs'
 
-let token = null
-
-const setToken = newToken => {
-  token = `bearer ${newToken}`
-}
-
 const getAll = async () => {
-  /*
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
-  */
   const response = await axios.get(baseUrl)
   return response.data
 }
 
 const create = async newBlog => {
-  const config = {
-    headers: { Authorization: token },
-  }
-
-  const response = await axios.post(baseUrl, newBlog, config)
+  const response =
+    await axios.post(
+      baseUrl,
+      newBlog,
+      { headers: authHeader() }
+    )
   return response.data
 }
 
@@ -31,13 +23,13 @@ const like = async (id, blog) => {
 }
 
 const remove = async (id) => {
-  const config = {
-    headers: { Authorization: token },
-  }
-
-  const response = await axios
-    .delete(`${baseUrl}/${id}`, config)
+  const response =
+    await axios
+      .delete(
+        `${baseUrl}/${id}`,
+        { headers: authHeader() }
+      )
   return response
 }
 
-export default { getAll, create, like, remove, setToken }
+export default { getAll, create, like, remove, }
