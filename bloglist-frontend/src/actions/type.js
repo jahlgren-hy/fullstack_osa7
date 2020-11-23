@@ -4,5 +4,12 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGIN_FAIL = 'LOGIN_FAIL'
 export const LOGOUT = 'LOGOUT'
 
+export const INIT_BLOGS = 'INIT_BLOGS'
+export const NEW_BLOG = 'NEW_BLOG'
+export const LIKE_BLOG = 'LIKE_BLOG'
+export const REMOVE_BLOG = 'REMOVE_BLOG'
+
+export const INIT_USERS = 'INIT_USERS'
+
 export const SET_NOTIFICATION = 'SET_NOTIFICATION'
 export const CLEAR_NOTIFICATION = 'CLEAR_NOTIFICATION'

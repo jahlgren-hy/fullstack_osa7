@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import AddBlog from './AddBlog'
 import BlogList from './BlogList'
+import UserList from './UserList'
 import Login from './Login'
 import Notification from './Notification'
 
 import { initializeBlogs } from '../reducers/blogs'
+import { initializeUsers } from '../actions/users'
 import { useDispatch } from 'react-redux'
 
 const App = () => {
@@ -12,6 +14,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(initializeUsers())
   }, [dispatch])
 
   return (
@@ -23,6 +29,7 @@ const App = () => {
       <Login />
       <AddBlog />
       <BlogList />
+      <UserList />
     </main>
   )
 }

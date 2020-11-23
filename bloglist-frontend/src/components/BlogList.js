@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { Button, Collapse, Table } from 'react-bootstrap'
 
-import blogService from '../services/blogs'
 import { likeBlog, removeBlog } from '../reducers/blogs'
 import { useDispatch } from 'react-redux'
 
@@ -27,7 +26,6 @@ const Blog = ({ blog }) => {
 
   const onRemove = (event) => {
     event.preventDefault()
-    blogService.setToken(currentUser.token)
     dispatch(removeBlog(blog.id, blog))
   }
 

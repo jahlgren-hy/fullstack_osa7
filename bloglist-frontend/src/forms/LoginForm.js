@@ -21,6 +21,8 @@ const LoginForm = ({
             {...username.fields()}
             id="username"
             placeholder="username"
+            required
+            autoFocus
           />
         </Form.Group>
         <Form.Group>
@@ -31,6 +33,7 @@ const LoginForm = ({
             {...password.fields()}
             placeholder="password"
             id="password"
+            required
           />
         </Form.Group>
         <Button

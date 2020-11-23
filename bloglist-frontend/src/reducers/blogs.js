@@ -1,10 +1,12 @@
 import blogService from '../services/blogs'
 import { setNotification } from '../reducers/notification'
 
-export const INIT_BLOGS = 'INIT_BLOGS'
-export const NEW_BLOG = 'NEW_BLOG'
-export const LIKE_BLOG = 'LIKE_BLOG'
-export const REMOVE_BLOG = 'REMOVE_BLOG'
+import {
+  INIT_BLOGS,
+  NEW_BLOG,
+  LIKE_BLOG,
+  REMOVE_BLOG,
+} from '../actions/type'
 
 const blogs = (state = [], action) => {
   switch (action.type) {

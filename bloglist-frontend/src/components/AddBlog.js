@@ -2,26 +2,17 @@ import React, { useRef } from 'react'
 import BlogForm from '../forms/BlogForm'
 import Togglable from './Togglable'
 
-import blogService from '../services/blogs'
-//import storage from '../utils/storage'
-
 import { createBlog } from '../reducers/blogs'
 import { useDispatch, useSelector } from 'react-redux'
 import { useField } from '../hooks'
 
 const AddBlog = () => {
   const dispatch = useDispatch()
-  //const [user, setUser] = useState(null)
   const title = useField('text')
   const author = useField('text')
   const url = useField('text')
 
   const blogFormRef = useRef()
-  /*
-  useEffect(() => {
-    setUser(storage.loadUser())
-  }, [])
-*/
   const { user: currentUser } =
     useSelector(state => state.auth)
 
@@ -33,7 +24,6 @@ const AddBlog = () => {
       url: url.value,
     }
     try {
-      blogService.setToken(currentUser.token)
       blogFormRef.current.toggleVisibility()
       dispatch(createBlog(blog))
       title.reset()

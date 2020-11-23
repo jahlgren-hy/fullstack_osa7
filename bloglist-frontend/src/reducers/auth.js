@@ -9,7 +9,6 @@ import authService from '../services/login'
 import { setNotification } from '../reducers/notification'
 
 const user = JSON.parse(localStorage.getItem(storageKey))
-let username
 
 const initialState = user
   ? { isLoggedIn: true, user }
@@ -53,7 +52,6 @@ export const login = (username, password) => {
         { message: `${user.name} welcome back!` },
       ))
 
-      username = user.name
       dispatch({
         type: LOGIN_SUCCESS,
         data: user,
@@ -62,7 +60,7 @@ export const login = (username, password) => {
       dispatch(setNotification(
         {
           message: 'wrong username/password',
-          type: 'error'
+          type: 'danger',
         }
       ))
       dispatch({
@@ -75,7 +73,7 @@ export const login = (username, password) => {
 export const logout = () => {
   return async dispatch => {
     dispatch(setNotification(
-      { message: `${username} logged out` },
+      { message: `${user.name} logged out` },
     ))
     authService.logout()
     dispatch({
