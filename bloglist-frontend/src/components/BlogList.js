@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { Button, Collapse, Table } from 'react-bootstrap'
 
-import { likeBlog, removeBlog } from '../reducers/blogs'
+import { likeBlog, removeBlog } from '../actions/blogs'
 import { useDispatch } from 'react-redux'
 
 const Blog = ({ blog }) => {
@@ -29,12 +29,15 @@ const Blog = ({ blog }) => {
     dispatch(removeBlog(blog.id, blog))
   }
 
+  if (!blog.user) {
+    return null
+  }
   return (
     <tr>
       <td>
         {blog.title} {blog.author}
       </td>
-      <td key={blog.id}>
+      <td>
         <Button
           onClick={() => setOpen(!open)}
           aria-controls="blog-details"

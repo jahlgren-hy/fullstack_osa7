@@ -6,7 +6,7 @@ import {
 import { storageKey } from '../utils/storage'
 
 import authService from '../services/login'
-import { setNotification } from '../reducers/notification'
+import { setNotification } from '../actions/notification'
 
 const user = JSON.parse(localStorage.getItem(storageKey))
 

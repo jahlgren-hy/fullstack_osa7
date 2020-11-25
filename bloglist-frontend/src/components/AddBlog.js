@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import BlogForm from '../forms/BlogForm'
 import Togglable from './Togglable'
 
-import { createBlog } from '../reducers/blogs'
+import { createBlog } from '../actions/blogs'
 import { useDispatch, useSelector } from 'react-redux'
 import { useField } from '../hooks'
 

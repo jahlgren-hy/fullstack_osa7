@@ -8,15 +8,22 @@ import { useSelector } from 'react-redux'
 
 const UserList = () => {
   const users = useSelector(state => state.users)
+  const { user: currentUser } =
+    useSelector(state => state.auth)
+
+  if (currentUser === null) {
+    return null
+  }
+
   return (
     <aside>
       <header>
         <h1>Users</h1>
       </header>
-      <ListGroup variant="flush">
+      <ListGroup as="ul" variant="flush">
         {
           users.map(user =>
-            <ListGroup.Item key={user.id}>
+            <ListGroup.Item key={user.id} as="li">
               {user.name} {user.blogs.length}
             </ListGroup.Item>
           )}

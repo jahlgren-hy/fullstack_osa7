@@ -5,9 +5,11 @@ import UserList from './UserList'
 import Login from './Login'
 import Notification from './Notification'
 
-import { initializeBlogs } from '../reducers/blogs'
+import { initializeBlogs } from '../actions/blogs'
 import { initializeUsers } from '../actions/users'
 import { useDispatch } from 'react-redux'
+
+import { Container } from 'react-bootstrap'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -21,7 +23,7 @@ const App = () => {
   }, [dispatch])
 
   return (
-    <main className="container">
+    <Container as="main">
       <header>
         <h1> Blogs</h1>
       </header>
@@ -30,7 +32,7 @@ const App = () => {
       <AddBlog />
       <BlogList />
       <UserList />
-    </main>
+    </Container>
   )
 }
 

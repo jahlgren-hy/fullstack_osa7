@@ -7,36 +7,35 @@ router.get('/', async (_request, response) => {
   const blogs = await Blog
     .find({})
     .populate('user', { username: 1, name: 1 })
-  response.json(blogs.map(blog => blog.toJSON()))
+  response.json(blogs)
 })
 
 router.post('/', async (request, response) => {
-  const { body, token } = request
+  const blog = new Blog(request.body)
 
-  const decodedToken = jwt
-    .verify(token, process.env.SECRET)
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
-  if (!token || !decodedToken.id) {
-    response
-      .status(401)
-      .json({ error: 'Invalid authentication' })
-      .end()
+  if (!request.token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
   }
+
   const user = await User.findById(decodedToken.id)
 
-  const blog = new Blog({
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes,
-    user: user._id,
-  })
+  if (!blog.url || !blog.title) {
+    return response.status(400).send({ error: 'title or url missing ' })
+  }
 
+  if (!blog.likes) {
+    blog.likes = 0
+  }
+
+  blog.user = user
   const savedBlog = await blog.save()
-  user.blogs = [...user.blogs, savedBlog._id]
+
+  user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
-  response.status(201).json(savedBlog.toJSON())
+  return response.status(201).json(savedBlog)
 })
 
 router.delete('/:id', async (request, response) => {

@@ -18,8 +18,19 @@ const create = async newBlog => {
 }
 
 const like = async (id, blog) => {
-  const response = await axios.put(`${baseUrl}/${id}`, blog)
-  return response
+  try {
+    const response = await axios.put(`${baseUrl}/${id}`, blog)
+    return response
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+
+    console.log(message)
+  }
 }
 
 const remove = async (id) => {
