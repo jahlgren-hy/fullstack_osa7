@@ -1,20 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
+
 import Blog from './components/Blog'
 import BlogForm from './forms/BlogForm'
 import LoginForm from './forms/LoginForm'
-import Notification from './components/Notification'
+import Notification from './features/notification/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import './App.css'
+
+import { setNotification } from './features/notification/notificationSlice'
 
 const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [blogs, setBlogs] = useState([])
-  const [message, setMessage] = useState({ message: null })
 
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService
@@ -35,11 +38,6 @@ const App = () => {
     }
   }, [])
 
-  const notify = (message, type = 'info') => {
-    setMessage({ message, type })
-    setTimeout(() => setMessage({ message: null }), 5000)
-  }
-
   const blogFormRef = useRef()
 
   const addBlog = async (blog) => {
@@ -48,7 +46,11 @@ const App = () => {
       const newBlog = await blogService
         .create(blog)
       setBlogs(blogs.concat(newBlog))
-      notify(`Lisätty uusi blogi ${newBlog.author}'n ${newBlog.title} `)
+      dispatch(
+        setNotification({
+          message: `Lisätty uusi blogi ${newBlog.author}'n ${newBlog.title} `
+        })
+      )
     } catch (error) {
       console.log(error)
     }
@@ -70,7 +72,12 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (error) {
-      notify('wrong credentials!', 'error')
+      dispatch(
+        setNotification({
+          message: 'wrong credentials!',
+          type: 'danger',
+        })
+      )
       setUser(user)
       setUsername('')
       setPassword('')
@@ -80,6 +87,12 @@ const App = () => {
 
   const handleLogout = async () => {
     window.localStorage.removeItem('loggedAppUser')
+    dispatch(
+      setNotification({
+        message: `${user.name} logged out`,
+        type: 'info',
+      })
+    )
     setUser(null)
   }
 
@@ -113,7 +126,7 @@ const App = () => {
   return (
     <div className="App">
       <h1> Blogs</h1>
-      <Notification message={message} />
+      <Notification />
       {user === null && loginForm()}
       {user !== null && blogView()}
     </div>
